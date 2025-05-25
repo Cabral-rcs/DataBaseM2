@@ -1,0 +1,25 @@
+{
+  "name": "gerenciador-de-tarefas",
+  "version": "1.0.0",
+  "description": "O projeto consiste em uma aplicação web de organização que possui seprações por temas, na qual cada quadro representa um contexto diferente de tarefas como:<br>\r - Dia a dia<br>\r - Casa<br>\r - Trabalho <br>\r - Faculdade <br>\r <br> E, portanto, possui um dashboard com colunas de tarefas específicas daquele tema. <br>\r As tarefas são exibidas em cards com suas principais informações e em uma das três colunas de estatus.\r Os estatus são: <br>\r - Fazer <br>\r - Fazendo <br>\r - Feito <br>",
+  "main": "jest.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "js": "^0.1.0",
+    "migrate": "^2.1.0",
+    "pg": "^8.16.0",
+    "sequelize": "^6.37.7"
+  }
+}
