@@ -6,8 +6,8 @@
 A crescente demanda por produtividade no cotidiano tem evidenciado a importância da organização pessoal, especialmente diante de grandes volumes de tarefas. A ausência de um método estruturado pode comprometer significativamente a eficiência e o cumprimento de atividades. Diante desse cenário, desenvolveu-se uma aplicação web voltada à organização de tarefas, com uma proposta gamificada e interface intuitiva, visando estimular o engajamento e facilitar o gerenciamento diário. A aplicação dispõe de um sistema de autenticação de usuários, garantindo a preservação do progresso mesmo após atualizações da página. Para isso, está conectada a um banco de dados responsável pelo armazenamento seguro das informações de login, quadros, tarefas e seus respectivos status.
 
 ## Diagrama do banco de dados
+![Diagrama (2)](https://github.com/user-attachments/assets/9d8e8a8c-32fb-4b57-b3f6-a51d8f093599)
 
-![Modelo_Banco](https://github.com/user-attachments/assets/220685af-c886-4429-b702-f1e7eca046a7)
 
 ### Modelo físico e lógico:
 ``` sql
