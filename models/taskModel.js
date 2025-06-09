@@ -16,10 +16,10 @@ module.exports = {
     );
     return res.rows[0];
   },
-  async update(id, task) {
+  async update(id, status) {
     const res = await db.query(
-      'UPDATE tasks SET title=$1, description=$2, status=$3 WHERE id=$4 RETURNING *',
-      [task.title, task.description, task.status, id]
+      'UPDATE tasks SET status=$1 WHERE id=$2 RETURNING *',
+      [status, id]
     );
     return res.rows[0];
   },

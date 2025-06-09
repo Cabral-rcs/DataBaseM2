@@ -1,42 +1,39 @@
-const db = require('../config/db');
+//const db = require('../config/db');
+const taskModel = require('../models/taskModel');
+const kanbanModel = require('../models/kanbanModel')
 
 exports.list = async (req, res) => {
-  const result = await db.query('SELECT * FROM tasks ORDER BY id DESC');
-  res.render('index', { title: 'Tarefas', tasks: result.rows });
+  const tasks = await taskModel.getAll(); // ⬅️ chama o model
+  res.render('index', { title: 'Tarefas', tasks });
 };
 
 exports.create = async (req, res) => {
   const { title, description, status } = req.body;
-  await db.query(
-    'INSERT INTO tasks (title, description, status) VALUES ($1, $2, $3)',
-    [title, description, status]
-  );
+  await taskModel.create({title, description, status}); // ⬅️ chama o model
   res.redirect('/');
 };
 
 exports.delete = async (req, res) => {
   const { id } = req.params;
-  await db.query('DELETE FROM tasks WHERE id = $1', [id]);
-  res.redirect('/');
+  await taskModel.delete(id)
+  res.redirect('/')
 };
 
 exports.kanban = async (req, res) => {
-  const result = await db.query('SELECT * FROM tasks');
-  const tasks = result.rows;
+
+  const tasks = await kanbanModel.listar()
 
   const grouped = {
     todo: tasks.filter(t => t.status === 'To Do'),
     doing: tasks.filter(t => t.status === 'Doing'),
     done: tasks.filter(t => t.status === 'Done')
   };
-
   res.render('kanban', { title: 'Kanban', tasks: grouped });
 };
 
 exports.updateStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
-
-  await db.query('UPDATE tasks SET status = $1 WHERE id = $2', [status, id]);
-  res.redirect('/kanban');
+  await taskModel.update(id, status)
+  res.redirect('/kanban')
 };
