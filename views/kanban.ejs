@@ -1,0 +1,57 @@
+
+<h1 class="text-2xl font-bold mb-4">Kanban</h1>
+
+<div class="grid grid-cols-3 gap-4">
+  <% ['To Do', 'Doing', 'Done'].forEach((status) => { %>
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-semibold mb-2"><%= status %></h2>
+      <% let taskList = tasks[status.toLowerCase().replace(' ', '')]; %>
+      <% taskList.forEach(task => { %>
+        <div class="border p-2 mb-2 rounded bg-gray-50">
+          <h3 class="font-bold"><%= task.title %></h3>
+          <p><%= task.description %></p>
+          <form action="/tasks/<%= task.id %>/update" method="POST" class="mt-2">
+                <select name="status" class="p-1 border rounded">
+                <option value="To Do" <%= task.status === 'To Do' ? 'selected' : '' %>>To Do</option>
+                <option value="Doing" <%= task.status === 'Doing' ? 'selected' : '' %>>Doing</option>
+                <option value="Done" <%= task.status === 'Done' ? 'selected' : '' %>>Done</option>
+                </select>
+                <button type="submit" class="ml-2 text-blue-600 hover:underline">Salvar</button>
+            </form>
+        </div>
+      <% }) %>
+    </div>
+  <% }) %>
+</div>
+<div>
+    
+</div>
+<a href="/" class="inline-block bg-green-500 text-white px-4 py-2 rounded mb-4">Voltar para a home</a>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('form[data-update]').forEach(form => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = form.dataset.update;
+        const status = form.querySelector('select[name="status"]').value;
+
+        await fetch(`/api/tarefas/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+
+        location.reload(); // recarrega a página para refletir a mudança
+      });
+    });
+
+    document.querySelectorAll('button[data-delete]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.delete;
+        await fetch(`/api/tarefas/${id}`, { method: 'DELETE' });
+        location.reload();
+      });
+    });
+  });
+</script>
