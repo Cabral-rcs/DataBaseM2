@@ -17,38 +17,16 @@ Além disso, o usuário possui a opção de criar novos quadros, novas tarefas, 
 Por fim, todos esses dados serão armazenados em um banco de dados que contará com um sistema de login para validar o usuário e atribuir seu progresso dentro da aplicação
 
 ## Estrutura de pastas 
-```
-meu-projeto/
-│
-├── config/                # Arquivos de configuração (ex: conexão com banco)
-│   └── database.js
-├── controllers/           # Lógica de controle das requisições
-│   └── HomeController.js
-├── models/                # Definição de modelos de dados (estrutura do banco)
-│   └── User.js
-├── routes/                # Definição das rotas do sistema
-│   └── index.js
-├── services/              # Serviços auxiliares do sistema
-│   └── userService.js
-├── assets/                # Arquivos públicos como imagens e fontes
-├── scripts/               # Arquivos de JavaScript públicos
-├── styles/                # Arquivos CSS públicos
-├── tests/                 # Arquivos de testes unitários
-│   └── example.test.js
-├── .gitignore             # Arquivo para ignorar arquivos no Git
-├── .env.example           # Arquivo de exemplo para variáveis de ambiente
-├── jest.config.js         # Arquivo de configuração do Jest
-├── readme.md              # Documentação do projeto (Markdown)
-├── server.js              # Arquivo principal que inicializa o servidor
-└── rest.http              # Teste de endpoints (opcional)
-```
+![alt text](<Captura de tela 2025-06-08 231001.png>)
+![alt text](<Captura de tela 2025-06-08 231022.png>)
 
 ## Como executar o programa: 
-1. Clone o repositório para alguma IDE
+1. Clone o repositório para alguma IDE: https://github.com/Cabral-rcs/DataBaseM2.git
 2. Insira o comando "npm init -y" para criar automaticamente um arquivo package.json, no terminal
-3. Instale o Express: npm install express
-4. Inicie o programa: node server.js
-5. Abra uma guia no navegador e coloque: http://localhost:3000/tarefa
-6. Programa rodando!
+3. Instale as bibliotecas: npm install express ejs express-ejs-layouts pg dotenv
+4. Configure seu banco de dados com um arquivo .env
+5. Digite no terminal: npm run dev
+6. Abra uma guia no navegador e coloque: http://localhost:3000
+7. Programa rodando!
 
 
