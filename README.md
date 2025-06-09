@@ -25,7 +25,7 @@ Por fim, todos esses dados serão armazenados em um banco de dados que contará 
 2. Insira o comando "npm init -y" para criar automaticamente um arquivo package.json, no terminal
 3. Instale as bibliotecas: npm install express ejs express-ejs-layouts pg dotenv
 4. Configure seu banco de dados com um arquivo .env
-5. Digite no terminal: npm run dev
+5. Para rodar o programa digite no terminal: node server.js ou npm run dev
 6. Abra uma guia no navegador e coloque: http://localhost:3000
 7. Programa rodando!
 

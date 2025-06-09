@@ -11,30 +11,15 @@ A crescente demanda por produtividade no cotidiano tem evidenciado a importânci
 
 ### Modelo físico e lógico:
 ``` sql
--- Tabela de usuários
-CREATE TABLE Usuario (
-  ID SERIAL PRIMARY KEY,
-  Email VARCHAR(800) NOT NULL UNIQUE,
-  Senha INT NOT NULL
-);
 
 -- Tabela de tarefas
 CREATE TABLE Tarefa (
-  IDTarefa SERIAL PRIMARY KEY,
+  ID SERIAL PRIMARY KEY,
   Nome VARCHAR(800) NOT NULL,
   Descricao VARCHAR(800),
-  Prazo DATE,
-  Estatus INT
+  Estatus VARCHAR(20)
 );
 
--- Tabela de quadros (ligação entre usuários e tarefas)
-CREATE TABLE Quadro (
-  IDQuadro SERIAL PRIMARY KEY,
-  IDUsuario INT NOT NULL,
-  IDTarefa INT NOT NULL,
-  FOREIGN KEY (IDUsuario) REFERENCES Usuario(ID) ON DELETE CASCADE,
-  FOREIGN KEY (IDTarefa) REFERENCES Tarefa(IDTarefa) ON DELETE CASCADE
-);
 ```
 
 # Documentação
@@ -54,15 +39,6 @@ O projeto é organizado em três camadas principais:
 - **View:** Interface com o usuário (ainda não implementada).
 - **Controller:** Lógica de negócio e roteamento de requisições.
 
----
-
-## Ferramenta de Diagramação
-Gemini Pro
-
----
-
-## Modelos (Models)
-
 ### Entidade: Tarefa
 
 Responsável por representar e manipular tarefas no sistema.
@@ -72,86 +48,152 @@ Responsável por representar e manipular tarefas no sistema.
 | Atributo    | Tipo     | Descrição                        |
 |-------------|----------|----------------------------------|
 | idtarefa    | SERIAL   | Identificador único da tarefa    |
-| nome        | TEXT     | Nome da tarefa                   |
-| descricao   | TEXT     | Descrição da tarefa              |
-| prazo       | DATE     | Prazo de conclusão               |
-| estatus     | TEXT     | Status atual (ex: pendente, feito)
+| titulo        | VARCHAR(255)     | Nome da tarefa                   |
+| descricao   | TEXT     | Descrição da tarefa              |               |
+| estatus     | VARCHAR(255)    | Status atual (ex: To do, Doing e Done)
 
-#### Métodos do model `Tarefa`:
+.
 
-- `listarTarefas()`: Retorna todas as tarefas do banco de dados.
-- (Outros métodos como `criar`, `editar`, `excluir` podem ser adicionados ao model futuramente.)
+# 📜 Documentação do Projeto 
 
-#### Relações entre entidades:
-Atualmente não há outras entidades além de `Tarefa`, mas o sistema pode ser expandido com `Usuário`, `Etiqueta`, `Projeto`, etc.
+## - Controller: `taskController`
 
----
+## Função
 
-## Controladores (Controllers)
-
-### Controller: `TarefaController`
-
-Gerencia a lógica de negócio referente à entidade Tarefa e responde às requisições HTTP.
-
-#### Ações (methods):
-
-- `criarTarefa(req, res)`
-  - Entrada: `req.body` com `{ nome, descricao, prazo, estatus }`
-  - Saída: JSON com a tarefa criada
-  - Responsabilidade: Inserir nova tarefa no banco
-
-- `listarTarefas(req, res)`
-  - Entrada: nenhuma
-  - Saída: JSON com todas as tarefas
-  - Responsabilidade: Recuperar e retornar todas as tarefas
-
-- `editarTarefa(req, res)`
-  - Entrada: `req.params.nomeAntigo`, `req.body` com `{ nomeNovo, descricao, prazo, estatus }`
-  - Saída: JSON com a tarefa atualizada
-  - Responsabilidade: Atualizar os dados da tarefa
-
-- `excluirTarefa(req, res)`
-  - Entrada: `req.params.id`
-  - Saída: Mensagem de sucesso ou erro
-  - Responsabilidade: Remover tarefa do banco
-
-#### Integração com Models e Views:
-- Os controllers chamam diretamente os métodos definidos nos Models (`Tarefa.listarTarefas()`, por exemplo).
-- Ainda não há Views conectadas ao sistema; as respostas são em JSON (API RESTful).
-
-## Infraestrutura
-
-### Componentes:
-
-- **Back-End:** Node.js com Express
-- **Banco de Dados:** PostgreSQL
-- **Driver de conexão:** `pg` (node-postgres)
-- **Organização de pastas:** Separação clara por `models`, `controllers`, `routes`, `config`
-
-### Integração com a Arquitetura MVC:
-
-- Models encapsulam o acesso ao banco via `pool.query()`.
-- Controllers utilizam os models e tratam as requisições HTTP.
-- As views serão adicionadas posteriormente para compor a camada de interface.
-
-### Justificativa de escolhas:
-
-- **Node.js + Express:** leve, modular e rápido para desenvolver APIs REST.
-- **PostgreSQL:** robusto, seguro e com ótima performance para operações relacionais.
-- **Arquitetura MVC:** facilita organização, testabilidade e manutenção do código.
+Gerencia a lógica de negócio referente à entidade **Tarefa** e responde às requisições HTTP, tanto para **páginas HTML** (EJS) quanto para **API REST** (fetch via `/api`).
 
 ---
 
-## Implicações da Arquitetura
+## Ações do Controller (Métodos)
 
-### Escalabilidade:
-- A separação de responsabilidades (MVC) permite escalar cada camada independentemente.
-- Fácil integração futura com frontend.
+### `list(req, res)`
 
-### Manutenção:
-- Código organizado por responsabilidade facilita leitura e alterações localizadas.
-- Adição de novas funcionalidades pode ser feita com impacto mínimo no restante do sistema.
+* **Entrada**: nenhuma
+* **Saída**: renderiza a view `index.ejs` com a lista de tarefas
+* **Responsabilidade**: Buscar todas as tarefas no banco e repassá-las para exibição
 
-### Testabilidade:
-- Cada camada pode ser testada isoladamente.
-- Possível incluir testes unitários para controllers e models com ferramentas como Jest.
+---
+
+###  `create(req, res)`
+
+* **Entrada**: `req.body` com `{ title, description, status }`
+* **Saída**: Redireciona para `/` após criação
+* **Responsabilidade**: Inserir nova tarefa no banco de dados
+
+---
+
+###  `delete(req, res)`
+
+* **Entrada**: `req.params.id`
+* **Saída**: Redireciona para `/` após exclusão
+* **Responsabilidade**: Remover uma tarefa do banco de dados
+
+---
+
+###  `kanban(req, res)`
+
+* **Entrada**: nenhuma
+* **Saída**: renderiza `kanban.ejs` com tarefas agrupadas por status (`To Do`, `Doing`, `Done`)
+* **Responsabilidade**: Organizar visualmente as tarefas em colunas estilo Kanban
+
+---
+
+### `apiList(req, res)`
+
+* **Entrada**: nenhuma
+* **Saída**: JSON com todas as tarefas
+* **Responsabilidade**: Fornece os dados brutos das tarefas para uso por `fetch()`
+
+---
+
+### `apiCreate(req, res)`
+
+* **Entrada**: `req.body` com `{ title, description, status }`
+* **Saída**: JSON da tarefa criada
+* **Responsabilidade**: Criar nova tarefa e retornar os dados
+
+---
+
+###  `apiUpdate(req, res)`
+
+* **Entrada**: `req.params.id`, `req.body` com `{ title, description, status }`
+* **Saída**: JSON com a tarefa atualizada
+* **Responsabilidade**: Atualizar os dados da tarefa no banco
+
+---
+
+###  `apiDelete(req, res)`
+
+* **Entrada**: `req.params.id`
+* **Saída**: Mensagem JSON de sucesso
+* **Responsabilidade**: Remover tarefa do banco via API
+
+---
+
+##  Integração com Models e Views
+
+* Os **controllers** chamam diretamente os métodos definidos nos **models** (`taskModel.getAll()`, `taskModel.create()` etc.).
+* As **views** (EJS) são renderizadas com dados passados do controller (`res.render(...)`).
+* Uma camada de **API RESTful** foi implementada em rotas separadas: `/api/tasks`.
+
+---
+
+##  Infraestrutura
+
+* **Back-End**: Node.js com Express
+* **Banco de Dados**: PostgreSQL
+* **Driver**: `pg` (node-postgres)
+* **Middleware**: `express-ejs-layouts`
+* **Front-End**: EJS + TailwindCSS
+* **Formulários**: Com `fetch()` (sem reload da página nas rotas `/api`)
+
+---
+
+##  Organização de Pastas Principais
+
+```
+/controllers   => taskController.js
+/models        => taskModel.js
+/routes        => taskRoutes.js, apiRoutes.js
+/views         => index.ejs, kanban.ejs, layout.ejs
+/config        => db.js
+/public        => (estático, se necessário)
+server.js      => ponto de entrada
+```
+
+---
+
+## Integração com a Arquitetura MVC
+
+| Camada         | Responsabilidade                                                             |
+| -------------- | ---------------------------------------------------------------------------- |
+| **Model**      | Encapsula acesso ao banco de dados com `pool.query()` (ex: `taskModel.js`)   |
+| **Controller** | Gerencia lógica da aplicação e as requisições HTTP (ex: `taskController.js`) |
+| **View**       | Interface com o usuário via EJS (`index.ejs`, `kanban.ejs`)                  |
+
+---
+
+##  Justificativa de Escolhas Técnicas
+
+* **Node.js + Express**: leve, modular, ideal para aplicações web rápidas
+* **PostgreSQL**: banco robusto e confiável com excelente suporte relacional
+* **MVC**: facilita manutenção, testes e organização de código
+* **EJS**: ideal para renderizar HTML dinâmico de forma simples
+* **fetch() + API**: moderniza o front-end sem recarregar a página
+
+---
+
+##  Implicações da Arquitetura
+
+### Escalabilidade
+
+* Camadas independentes permitem escalar separadamente back, model e views
+* APIs REST facilitam futura integração com frontend SPA (React, Vue etc.)
+
+### Manutenção
+
+* Separacão clara facilita leitura e adição de novas funcionalidades
+
+### Testabilidade
+
+* Models e controllers são facilmente testáveis com Jest ou Supertest
